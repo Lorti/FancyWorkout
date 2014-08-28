@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -131,7 +132,7 @@ public class MainActivity extends Activity {
             /**
              * Set the text and element for the repetitions overview.
              */
-            LinearLayout layout = (LinearLayout) getView().findViewById(R.id.repetitionsDisplay);
+            final LinearLayout layout = (LinearLayout) getView().findViewById(R.id.repetitionsDisplay);
             int[] repetitions = this.getArguments().getIntArray("repetitions");
             String html = "";
             for (int i = 0; i < repetitions.length; i++) {
@@ -141,25 +142,33 @@ public class MainActivity extends Activity {
             text.setText(Html.fromHtml(html));
             layout.addView(text);
 
+            Button btn = (Button) getView().findViewById(R.id.doneButton);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    (getView().findViewById(R.id.workLayout)).setVisibility(View.INVISIBLE);
+                    (getView().findViewById(R.id.pauseLayout)).setVisibility(View.VISIBLE);
 
-            new CountDownTimer(5000, 1000) {
-                TextView time = (TextView) getView().findViewById(R.id.value);
+                    new CountDownTimer(5000, 1000) {
+                        TextView time = (TextView) getView().findViewById(R.id.time);
 
-                public void onTick(long timeUntilFinished) {
-                    time.setText(Long.toString(timeUntilFinished / 1000));
+                        public void onTick(long timeUntilFinished) {
+                            time.setText(Long.toString(timeUntilFinished / 1000));
+                        }
+
+                        public void onFinish() {
+                            time.setText("Done!");
+                            try {
+                                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                                Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
+                                r.play();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }.start();
                 }
-
-                public void onFinish() {
-                    time.setText("Done!");
-                    try {
-                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                        Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
-                        r.play();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }.start();
+            });
         }
     }
 }
