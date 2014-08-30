@@ -13,7 +13,6 @@ android:padding="8dp">
         android:text="Name"
         android:layout_weight="2"
         android:textSize="16dp"
-        android:elegantTextHeight="false"
         android:gravity="center|left"
         android:ellipsize="end"
         android:singleLine="true"
