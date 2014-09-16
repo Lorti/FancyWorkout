@@ -2,6 +2,7 @@ package com.radiatedpixel.www.fancyworkout;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -103,29 +104,67 @@ public class ExerciseActivity extends Activity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    (getView().findViewById(R.id.workLayout)).setVisibility(View.INVISIBLE);
-                    (getView().findViewById(R.id.pauseLayout)).setVisibility(View.VISIBLE);
+                    PauseFragment fragment = new PauseFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putInt("currentSet", getArguments().getInt("currentSet"));
+                    fragment.setArguments(arguments);
 
-                    new CountDownTimer(5000, 1000) {
-                        TextView time = (TextView) getView().findViewById(R.id.time);
-
-                        public void onTick(long timeUntilFinished) {
-                            time.setText(Long.toString(timeUntilFinished / 1000));
-                        }
-
-                        public void onFinish() {
-                            time.setText("Done!");
-                            try {
-                                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-                                Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
-                                r.play();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }.start();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.container, fragment)
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .commit();
                 }
             });
+        }
+    }
+
+    /**
+     * Pause fragment
+     */
+    public static class PauseFragment extends Fragment {
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_pause, container, false);
+            return rootView;
+        }
+
+        @Override
+        public void onActivityCreated (Bundle savedInstanceState) {
+            super.onActivityCreated(savedInstanceState);
+
+            /**
+             * Start the countdown for this pause.
+             */
+            new CountDownTimer(6000, 1000) {
+                TextView time = (TextView) getView().findViewById(R.id.time);
+
+                public void onTick(long timeUntilFinished) {
+                    time.setText(Long.toString(timeUntilFinished / 1000));
+                }
+
+                public void onFinish() {
+                    try {
+                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+                        Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
+                        r.play();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    // TODO
+                    ExerciseFragment fragment = new ExerciseFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putIntArray("repetitions", getActivity().getIntent().getIntArrayExtra("repetitions"));
+                    arguments.putInt("currentSet", getArguments().getInt("currentSet") + 1);
+                    fragment.setArguments(arguments);
+
+                    getFragmentManager().beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit();
+                }
+            }.start();
         }
     }
 }

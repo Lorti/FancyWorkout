@@ -31,41 +31,40 @@
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:id="@+id/workLayout"
+        android:id="@+id/pauseLayout"
         android:layout_below="@+id/repetitionsDisplay"
-        android:layout_marginTop="32dp"
-        android:visibility="visible">
+        android:layout_marginTop="32dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Please complete"
+            android:text="Please rest for"
             android:id="@+id/sentenceStart"
             android:textSize="16sp" />
 
         <TextView
-            android:text="23"
+            android:text="13"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textSize="64sp"
-            android:id="@+id/value"
+            android:id="@+id/time"
             android:textColor="@android:color/primary_text_dark" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Burpees."
+            android:text="seconds."
             android:id="@+id/sentenceEnd"
             android:textSize="16sp" />
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Done"
-            android:id="@+id/doneButton"
+            android:text="Continue"
+            android:id="@+id/continueButton"
             android:layout_marginTop="32dp"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
