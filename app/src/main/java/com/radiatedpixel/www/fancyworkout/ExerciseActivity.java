@@ -25,14 +25,21 @@ public class ExerciseActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new ExerciseFragment())
-                    .commit();
-        }
 
         Intent intent = getIntent();
         getActionBar().setTitle(intent.getStringExtra("name"));
+
+        ExerciseFragment fragment = new ExerciseFragment();
+        Bundle arguments = new Bundle();
+        arguments.putIntArray("repetitions", intent.getIntArrayExtra("repetitions"));
+        arguments.putInt("currentSet", 0);
+        fragment.setArguments(arguments);
+
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, fragment)
+                    .commit();
+        }
     }
 
 
@@ -73,15 +80,24 @@ public class ExerciseActivity extends Activity {
             /**
              * Set the text and element for the repetitions overview.
              */
-            final LinearLayout layout = (LinearLayout) getView().findViewById(R.id.repetitionsDisplay);
-            int[] repetitions = getActivity().getIntent().getIntArrayExtra("repetitions");
+            TextView text = (TextView) getView().findViewById(R.id.repetitions);
+            int[] repetitions = getArguments().getIntArray("repetitions");
+            int currentSet = getArguments().getInt("currentSet");
             String html = "";
             for (int i = 0; i < repetitions.length; i++) {
-                html += "<strong>" + repetitions[i] + "</strong> ";
+                if (i == currentSet) {
+                    html += "<strong>" + repetitions[i] + "</strong> ";
+                } else {
+                    html += repetitions[i] + " ";
+                }
             }
-            final TextView text = new TextView(getActivity());
             text.setText(Html.fromHtml(html));
-            layout.addView(text);
+
+            /**
+             * Set the text for the current set.
+             */
+            text = (TextView) getView().findViewById(R.id.value);
+            text.setText(Integer.toString(repetitions[currentSet]));
 
             Button btn = (Button) getView().findViewById(R.id.doneButton);
             btn.setOnClickListener(new View.OnClickListener() {
