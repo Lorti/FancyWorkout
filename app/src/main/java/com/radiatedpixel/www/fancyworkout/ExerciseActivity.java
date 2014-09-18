@@ -22,18 +22,26 @@ import android.widget.TextView;
 
 public class ExerciseActivity extends Activity {
 
+    private int[] repetitions;
+    private int total;
+    private int currentSet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_exercise);
 
         Intent intent = getIntent();
+        this.repetitions = intent.getIntArrayExtra("repetitions");
+        this.total = intent.getIntExtra("total", 0);
+        this.currentSet = 0;
         getActionBar().setTitle(intent.getStringExtra("name"));
 
         ExerciseFragment fragment = new ExerciseFragment();
         Bundle arguments = new Bundle();
-        arguments.putIntArray("repetitions", intent.getIntArrayExtra("repetitions"));
-        arguments.putInt("currentSet", 0);
+        arguments.putIntArray("repetitions", repetitions);
+        arguments.putInt("total", total);
+        arguments.putInt("currentSet", currentSet);
         fragment.setArguments(arguments);
 
         if (savedInstanceState == null) {
@@ -41,8 +49,13 @@ public class ExerciseActivity extends Activity {
                     .add(R.id.container, fragment)
                     .commit();
         }
-    }
 
+        // Set total number of repetitions across all sets.
+        final TextView text = (TextView) findViewById(R.id.total);
+        text.setText(Integer.toString(total));
+
+        setStatusText();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -64,6 +77,22 @@ public class ExerciseActivity extends Activity {
     }
 
     /**
+     * Set the text for the repetitions overview.
+     */
+    public void setStatusText() {
+        TextView text = (TextView) this.findViewById(R.id.repetitions);
+        String html = "";
+        for (int i = 0; i < repetitions.length; i++) {
+            if (i == currentSet) {
+                html += "<strong>" + repetitions[i] + "</strong> ";
+            } else {
+                html += repetitions[i] + " ";
+            }
+        }
+        text.setText(Html.fromHtml(html));
+    }
+
+    /**
      * Exercise fragment
      */
     public static class ExerciseFragment extends Fragment {
@@ -79,25 +108,11 @@ public class ExerciseActivity extends Activity {
             super.onActivityCreated(savedInstanceState);
 
             /**
-             * Set the text and element for the repetitions overview.
-             */
-            TextView text = (TextView) getView().findViewById(R.id.repetitions);
-            int[] repetitions = getArguments().getIntArray("repetitions");
-            int currentSet = getArguments().getInt("currentSet");
-            String html = "";
-            for (int i = 0; i < repetitions.length; i++) {
-                if (i == currentSet) {
-                    html += "<strong>" + repetitions[i] + "</strong> ";
-                } else {
-                    html += repetitions[i] + " ";
-                }
-            }
-            text.setText(Html.fromHtml(html));
-
-            /**
              * Set the text for the current set.
              */
-            text = (TextView) getView().findViewById(R.id.value);
+            int[] repetitions = getArguments().getIntArray("repetitions");
+            int currentSet = getArguments().getInt("currentSet");
+            TextView text = (TextView) getView().findViewById(R.id.value);
             text.setText(Integer.toString(repetitions[currentSet]));
 
             Button btn = (Button) getView().findViewById(R.id.doneButton);

@@ -4,36 +4,15 @@
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="32dp"
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context=".MainActivity$FragmentExercise">
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/activity_horizontal_margin"
-        android:gravity="center"
-        android:id="@+id/repetitionsDisplay"
-        android:layout_alignParentTop="true"
-        android:background="#ff1a1a1a">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="5 7 11 13 17"
-            android:id="@+id/repetitions"
-            android:textColor="@android:color/secondary_text_dark" />
-    </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:id="@+id/workLayout"
-        android:layout_below="@+id/repetitionsDisplay"
-        android:layout_marginTop="32dp"
         android:visibility="visible">
 
         <TextView
@@ -68,6 +47,7 @@
             android:id="@+id/doneButton"
             android:layout_marginTop="32dp"
             android:layout_gravity="center_horizontal" />
+
     </LinearLayout>
 
 </RelativeLayout>

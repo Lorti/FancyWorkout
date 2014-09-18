@@ -83,6 +83,7 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(getActivity(), ExerciseActivity.class);
                 intent.putExtra("name", item.name);
                 intent.putExtra("repetitions", item.repetitions);
+                intent.putExtra("total", item.getTotalRepetitions());
                 startActivity(intent);
             }
         };
